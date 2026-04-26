@@ -1,45 +1,86 @@
-# FitME — MERN Fitness Tracker
+# FitMe 💪
 
-FitME is a MERN stack fitness app with **user** and **admin** experiences. The frontend is a React app, and the backend is an Express + MongoDB API.
+A full-stack fitness tracking web application built with the MERN stack. Users can create profiles, track body metrics over time, and manage their fitness journey — with a separate admin panel for platform management.
+
+<!-- Replace the line below with an actual screenshot once deployed -->
+<!-- ![FitMe Preview](./Screenshots/dashboard.png) -->
+
+## 🔴 Live Demo
+
+> Coming soon — [Deploy link will go here]
+
+---
 
 ## Features
 
 ### User
 
-- Create a profile and track basic body information over time
-- Auth flows (email/OTP/forgot password) are present in the codebase (see `backend/controller/authController.js`)
+- Register and log in with email/password
+- OTP-based email verification and forgot password flow
+- Google OAuth login
+- Create and update a personal fitness profile
+- Track body information over time
 
 ### Admin
 
-- Admin management endpoints (create/update/check) under `/api/admin`
-- Admin UI screens exist under `frontend/src/admin/`
+- Separate admin dashboard
+- Create and manage admin accounts
+- View all registered users
+- Role-based access control (`isAdmin` check)
 
-> Note: Several API route modules exist (`article`, `auth`, `contact`, `exercise`, `favourite`, `supplement`) but are currently **commented out** in `backend/routes/index.js`, so only `/api/admin` is wired by default.
+---
 
-## Tech stack
+## Tech Stack
 
-- **Frontend**: React 18, React Router, Axios, Bootstrap
-- **Backend**: Node.js, Express, Mongoose, JWT, Nodemailer
-- **Database**: MongoDB
+| Layer    | Technology                                 |
+| -------- | ------------------------------------------ |
+| Frontend | React 18, React Router, Axios, Bootstrap   |
+| Backend  | Node.js, Express.js                        |
+| Database | MongoDB, Mongoose                          |
+| Auth     | JWT (cookie-based), Google OAuth 2.0       |
+| Email    | Nodemailer (OTP & password reset)          |
+| Dev      | Concurrently (runs both servers from root) |
 
-## Project structure
+---
 
-```text
-MERN-Fitme/
-  backend/                 # Express API + MongoDB models
-  frontend/                # React app
-  package.json             # Root scripts (runs both with concurrently)
+## Project Structure
+
+```
+MERN-FitMe/
+├── backend/
+│   ├── config/          # DB connection, Google OAuth strategy
+│   ├── controller/      # Route handlers (auth, admin, user)
+│   ├── middleware/      # JWT auth middleware
+│   ├── models/          # Mongoose schemas
+│   ├── routes/          # Express routers
+│   └── server.js
+├── frontend/
+│   ├── src/
+│   │   ├── admin/       # Admin panel pages
+│   │   ├── components/  # Reusable UI components
+│   │   └── pages/       # User-facing pages
+│   └── package.json
+└── package.json         # Root — runs both with concurrently
 ```
 
-## Getting started (local development)
+---
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (LTS recommended)
+- Node.js (LTS)
 - npm
-- MongoDB running locally (or a MongoDB connection string)
+- MongoDB (local or [Atlas](https://www.mongodb.com/cloud/atlas))
 
-### Install dependencies
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/SajalKumar02/MERN-FitMe.git
+cd MERN-FitMe
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
@@ -47,73 +88,64 @@ cd backend && npm install
 cd ../frontend && npm install
 ```
 
-### Configure environment variables (backend)
+### 3. Configure environment variables
 
-Create `backend/.env`.
-
-Minimum variables to boot the API:
+Create a `backend/.env` file:
 
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/fitme
-JWT_TOKEN=change_me
+JWT_TOKEN=your_jwt_secret
 COOKIE_EXPIRE=7
 NODE_ENV=development
-```
 
-If you use email/OTP features (Nodemailer), also set:
-
-```env
+# Nodemailer (for OTP / password reset)
 SMTP_HOST=
 SMTP_PORT=
 SMTP_SERVICE=
 SMTP_EMAIL=
 SMTP_PASSWORD=
 
-# Some auth code paths also reference these:
-EMAIL_ADDRESS=
-EMAIL_PASSWORD=
-```
-
-If you use Google OAuth (strategy is implemented in `backend/config/google.oauth.js`), also set:
-
-```env
+# Google OAuth
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 ```
 
-### Run the app
-
-From the repo root:
+### 4. Run the app
 
 ```bash
+# From the root — starts both backend and frontend
 npm start
+
+# Or separately
+npm run backend    # http://localhost:5000
+npm run frontend   # http://localhost:3000
 ```
 
-This runs both:
+---
 
-- **Backend**: `http://localhost:5000`
-- **Frontend**: `http://localhost:3000` (proxied to backend via `frontend/package.json`)
-
-You can also run them separately:
-
-```bash
-npm run backend
-npm run frontend
-```
-
-## API (current wiring)
+## API Routes
 
 Base URL: `http://localhost:5000/api`
 
-### Admin routes
+| Method | Endpoint                | Description                    |
+| ------ | ----------------------- | ------------------------------ |
+| POST   | `/auth/register`        | Register a new user            |
+| POST   | `/auth/login`           | Login with email & password    |
+| POST   | `/auth/forgot-password` | Send OTP to email              |
+| GET    | `/admin`                | Get all users (admin only)     |
+| POST   | `/admin/add`            | Create an admin account        |
+| PATCH  | `/admin/:adminID`       | Update admin details           |
+| GET    | `/admin/isadmin`        | Check if current user is admin |
 
-- `GET /admin` — list users/admins (current implementation returns all users)
-- `GET /admin/isadmin` — role check (route exists; ensure controller export matches)
-- `POST /admin/add` — create an admin
-- `PATCH /admin/:adminID` — update an admin
+---
 
-## Security notes
+## Contributing
 
-- Don’t commit secrets. Add `backend/.env` to `.gitignore` (recommended).
-- Rotate keys like `JWT_TOKEN` and SMTP credentials if they were ever committed.
+Pull requests are welcome. For major changes, open an issue first.
+
+---
+
+## Author
+
+**Sajal Kumar** — [GitHub](https://github.com/SajalKumar02)
